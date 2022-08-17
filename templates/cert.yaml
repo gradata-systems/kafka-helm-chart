@@ -1,0 +1,28 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "kafka.fullname" . }}
+  labels:
+    {{- include "kafka.labels" . | nindent 4 }}
+spec:
+  secretName: {{ include "kafka.fullname" . }}-tls
+  commonName: {{ include "kafka.fullname" . }}.{{ .Release.Namespace }}
+  dnsNames:
+    - {{ include "kafka.fullname" . }}.{{ .Release.Namespace }}
+    {{- range $i, $e := until (.Values.replicaCount | int) }}
+    - {{ printf "%s-%d.%s.%s" (include "kafka.fullname" $) $i (include "kafka.fullname" $) $.Release.Namespace }}
+    {{- end }}
+  usages:
+    - server auth
+    - client auth
+  {{- with .Values.certificate }}
+  duration: {{ .duration }}
+  renewBefore: {{ .renewBefore }}
+  keystores:
+    jks:
+      create: true
+      passwordSecretRef:
+        {{- toYaml .keystorePasswordSecretRef | nindent 8 }}
+  issuerRef:
+    {{- toYaml .issuerRef | nindent 4 }}
+  {{- end }}

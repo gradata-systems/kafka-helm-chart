@@ -1,0 +1,89 @@
+# Default values for kafka.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: wurstmeister/kafka
+  tag: ""
+
+port: 9092
+
+# Optional: Provide access to Kafka consumers outside the cluster network.
+# Requires a `NodePort` or `LoadBalancer` service to be defined.
+externalListener:
+  enabled: false
+  # External hostname or IP. This must be resolvable outside the cluster network
+  host: # kafka.example.com
+  # Target container port (internal to the cluster)
+  containerPort: 9093
+  # Port exposed by the service (i.e. port external to the cluster)
+  nodePort: # 30093
+
+createTopics: [ ]
+#  - name: topic-1
+#    partitions: 10
+#    replicas: 1
+
+certificate:
+  duration: 8760h # 365 days
+  renewBefore: 168h # 7 days
+  keystorePasswordSecretRef:
+    name: ""
+    key: password
+  issuerRef:
+    name: ""
+    kind: ClusterIssuer
+
+zookeeper:
+  connectionString: ""
+  tls:
+    enabled: true
+  # In milliseconds
+  sessionTimeout: 10000
+  connectionTimeout: 20000
+
+volumeClaim:
+  volumeName: ""
+  storageClassName: ""
+  selector:
+    matchLabels: { }
+    matchExpressions: { }
+  dataSource: { }
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: { }
+  resources:
+    requests:
+      storage: ""
+    limits:
+      storage: ""
+
+podAnnotations: { }
+
+podSecurityContext:
+#  runAsUser: 1000
+#  runAsGroup: 1000
+#  fsGroup: 1000
+#  runAsNonRoot: true
+
+securityContext: { }
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+# runAsUser: 1000
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+
+nodeSelector: { }
+tolerations: [ ]
+affinity: { }

@@ -1,0 +1,19 @@
+{{- if .Values.externalListener.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kafka.fullname" . }}-nodeport
+  labels:
+    {{- include "kafka.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    {{- with .Values.externalListener }}
+    - port: {{ .containerPort }}
+      targetPort: kafka-external
+      nodePort: {{ .nodePort }}
+      protocol: TCP
+    {{- end }}
+  selector:
+    {{- include "kafka.selectorLabels" . | nindent 4 }}
+{{- end }}
