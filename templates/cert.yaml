@@ -9,6 +9,9 @@ spec:
   commonName: {{ include "kafka.fullname" . }}.{{ .Release.Namespace }}
   dnsNames:
     - {{ include "kafka.fullname" . }}.{{ .Release.Namespace }}
+    {{- if .Values.externalListener.enabled }}
+    - {{ .Values.externalListener.host | quote }}
+    {{- end }}
     {{- range $i, $e := until (.Values.replicaCount | int) }}
     - {{ printf "%s-%d.%s.%s" (include "kafka.fullname" $) $i (include "kafka.fullname" $) $.Release.Namespace }}
     {{- end }}

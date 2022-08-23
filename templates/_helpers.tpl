@@ -59,7 +59,7 @@ a second advertised listener is created.
 */}}
 {{- define "kafka.advertisedListeners" -}}
 {{- if .Values.externalListener.enabled }}
-{{- printf "INTERNAL://%s:%d,EXTERNAL://%s:%d" (include "kafka.advertisedHostName" .) (.Values.port | int) .Values.externalListener.host (.Values.externalListener.nodePort | int) }}
+{{- printf "INTERNAL://%s:%d,EXTERNAL://%s:%d" (include "kafka.advertisedHostName" .) (.Values.port | int) (include "kafka.advertisedHostName" .) (.Values.externalListener.nodePort | int) }}
 {{- else }}
 {{- printf "INTERNAL://%s:%d" (include "kafka.advertisedHostName" .) (.Values.port | int) }}
 {{- end }}
