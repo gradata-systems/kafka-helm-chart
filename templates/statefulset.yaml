@@ -90,26 +90,17 @@ spec:
               protocol: TCP
             {{- end }}
           startupProbe:
-            initialDelaySeconds: 3
-            periodSeconds: 1
-            timeoutSeconds: 3
-            failureThreshold: 10
             tcpSocket:
               port: kafka
+            {{- toYaml .Values.probeTimings.startup | nindent 12 }}
           readinessProbe:
-            initialDelaySeconds: 0
-            periodSeconds: 5
-            timeoutSeconds: 3
-            failureThreshold: 3
             tcpSocket:
               port: kafka
+            {{- toYaml .Values.probeTimings.readiness | nindent 12 }}
           livenessProbe:
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 3
-            failureThreshold: 3
             tcpSocket:
               port: kafka
+            {{- toYaml .Values.probeTimings.liveness | nindent 12 }}
           volumeMounts:
             - mountPath: /kafka
               subPath: data
